@@ -10,23 +10,28 @@ const divisione = document.querySelector('#divisione');
 const potenza = document.querySelector('#potenza');
 const radice = document.querySelector('#radice');
 const uguale = document.querySelector('#equal');
+const dot = document.querySelector('#dot');
 
-let firstN='', secondN='', str='', sign, result=0, pressed = 0, fNumber = 0;
+let firstNumber='', secondNumber='', str='', sign, result=0, operatorPressed = 0; 
+let fNumber = 0; //needed to know whether the user is entering the first number or the second number
 
+/* ------------ event listeners ------------ */
 
 numeri.forEach((numero) => {
     
     numero.addEventListener('click' , () => {
+
         if(fNumber === 0) {
-            if (sign == '=') {
-                inizialize();
-            }
+
+            sign == '=' ? inizialize() : null ; 
+
             newResult.textContent+= numero.textContent;
-            firstN+=numero.textContent;
+            firstNumber+=numero.textContent;
+
         } else if (fNumber === 1 && sign != '') {
 
             newResult.textContent+= numero.textContent;
-            secondN+= numero.textContent;
+            secondNumber+= numero.textContent;
             
         }
     });
@@ -35,36 +40,56 @@ numeri.forEach((numero) => {
 
 
 
+dot.addEventListener('click',  () => {
+    if (sign != '=' && newResult.textContent != '') {
+
+        let trovato1 = firstNumber.includes('.');
+        let trovato2 = secondNumber.includes('.');
+
+        if ((firstNumber != '' && operatorPressed === 0) && (!trovato1)) { 
+
+            newResult.textContent += dot.textContent;
+            firstNumber+=dot.textContent;
+            console.log(`sono trovato1 ${trovato1}`)
+    
+        } else if ((secondNumber != '' && operatorPressed === 1) && (!trovato2)) {
+
+            newResult.textContent += dot.textContent;
+            secondNumber+= dot.textContent;
+            console.log(`sono trovato2 ${trovato2}`)
+
+        }
+
+    } 
+});
+
+
 deleteAll.addEventListener('click',  () => {
-     inizialize ();
+     inizialize();
 });
 
 
 Sdelete.addEventListener('click' , () => {
     if (sign != '=') {
 
-    if(newResult.textContent == 'NaN' || newResult.textContent == 'Infinity' ) {
-        inizialize();
-    } else if (oldResult.textContent.slice(-1) != sign && newResult.textContent != '' && pressed == 0) {
+        if(newResult.textContent == 'NaN' || newResult.textContent == 'Infinity') {
+            inizialize();
 
-        /*str=oldResult.textContent.slice(0, -1);
-        sign='';
-        oldResult.textContent=str;
-        pressed = 0; */
-        console.log(firstN);
-        str = newResult.textContent;
-        newResult.textContent = str.slice(0, -1); 
-        str = firstN;
-        firstN = str.slice(0, -1); 
-        console.log(firstN);
-    } else {
+        } else if (oldResult.textContent.slice(-1) != sign && newResult.textContent != '' && operatorPressed == 0) {
 
-        str = newResult.textContent;
-        newResult.textContent = str.slice(0, -1); 
-        str = secondN;
-        secondN = str.slice(0, -1); 
+            str = newResult.textContent;
+            newResult.textContent = str.slice(0, -1); 
+            str = firstNumber;
+            firstNumber = str.slice(0, -1); 
+
+        } else {
+
+            str = newResult.textContent;
+            newResult.textContent = str.slice(0, -1); 
+            str = secondNumber;
+            secondNumber = str.slice(0, -1); 
         
-    }
+        }
 
     }
 });
@@ -73,23 +98,23 @@ Sdelete.addEventListener('click' , () => {
 
 addizione.addEventListener('click' , () => {
 
-    if (firstN != '') { 
+    if (firstNumber != '') { 
 
-        if(pressed === 0) {
+        if(operatorPressed === 0) {
 
             sign= addizione.textContent;
             oldResult.textContent= newResult.textContent +sign;
             newResult.textContent = '';
         
             fNumber =1;
-            pressed = 1; 
+            operatorPressed = 1; 
 
-        } else if (pressed === 1 && secondN != '') {
+        } else if (operatorPressed === 1 && secondNumber != '') {
+
+            result= operate(parseFloat(firstNumber), parseFloat(secondNumber), sign);
             sign= addizione.textContent;
-            result= operate(parseFloat(firstN), parseFloat(secondN), sign);
-            //sign= addizione.textContent;
-            firstN= result;
-            secondN='';
+            firstNumber= String(result);
+            secondNumber='';
             newResult.textContent= '';
             oldResult.textContent= result+sign;
         
@@ -98,23 +123,23 @@ addizione.addEventListener('click' , () => {
 });
 
 sottrazione.addEventListener('click' , () => {
-    if (firstN != '') {
+    if (firstNumber != '') {
 
-        if(pressed === 0) {
+        if(operatorPressed === 0) {
         
             sign= sottrazione.textContent;
             oldResult.textContent= newResult.textContent +sign;
             newResult.textContent = '';
         
-            pressed = 1; 
+            operatorPressed = 1; 
             fNumber = 1;
 
-        } else if (pressed === 1 && secondN != '') {
+        } else if (operatorPressed === 1 && secondNumber != '') {
 
-            result= operate(parseFloat(firstN), parseFloat(secondN), sign);
+            result= operate(parseFloat(firstNumber), parseFloat(secondNumber), sign);
             sign= sottrazione.textContent;
-            firstN= result;
-            secondN='';
+            firstNumber= String(result);
+            secondNumber='';
             newResult.textContent= '';
             oldResult.textContent= result+sign;
     
@@ -123,23 +148,23 @@ sottrazione.addEventListener('click' , () => {
 });
 
 moltiplicazione.addEventListener('click' , () => {
-    if (firstN != '') {
+    if (firstNumber != '') {
 
-        if(pressed === 0 ) {
+        if(operatorPressed === 0 ) {
         
             sign= moltiplicazione.textContent;
             oldResult.textContent= newResult.textContent +sign;
             newResult.textContent= '';
 
-            pressed = 1; 
+            operatorPressed = 1; 
             fNumber = 1;
 
-        } else if(pressed === 1 && secondN != '') {
+        } else if(operatorPressed === 1 && secondNumber != '') {
 
-            result= operate(parseFloat(firstN), parseFloat(secondN), sign);
+            result= operate(parseFloat(firstNumber), parseFloat(secondNumber), sign);
             sign= moltiplicazione.textContent;
-            firstN= result;
-            secondN= '';
+            firstNumber= String(result);
+            secondNumber= '';
             newResult.textContent= '';
             oldResult.textContent= result+sign;
     
@@ -148,23 +173,23 @@ moltiplicazione.addEventListener('click' , () => {
 });
 
 divisione.addEventListener('click' , () => {
-    if (firstN != '') {
+    if (firstNumber != '') {
 
-        if(pressed === 0 ) {
+        if(operatorPressed === 0 ) {
         
             sign= divisione.textContent;
             oldResult.textContent= newResult.textContent +sign;
             newResult.textContent= '';
 
-            pressed = 1; 
+            operatorPressed = 1; 
             fNumber = 1;
 
-        } else if(pressed === 1 && secondN != '') {
+        } else if(operatorPressed === 1 && secondNumber != '') {
 
-            result= operate(parseFloat(firstN), parseFloat(secondN), sign);
+            result= operate(parseFloat(firstNumber), parseFloat(secondNumber), sign);
             sign= divisione.textContent;
-            firstN= result;
-            secondN= '';
+            firstNumber= String(result);
+            secondNumber= '';
             newResult.textContent= '';
             oldResult.textContent= result+sign;
     
@@ -173,65 +198,59 @@ divisione.addEventListener('click' , () => {
 });
 
 potenza.addEventListener('click' , () => {
-    if (firstN != '') {
+    if (firstNumber != '') {
 
-        if(pressed === 0 ) {
+        if(operatorPressed === 0 ) {
         
             sign= potenza.textContent;
             oldResult.textContent= newResult.textContent +sign;
-            newResult.textContent= '';
-            result= operate(parseFloat(firstN), parseFloat(secondN), sign);
-            firstN= result;
-            secondN= '';
-            newResult.textContent= '';
-            oldResult.textContent= result;
-            //pressed = 1; 
-            //fNumber = 1;
+            result= operate(parseFloat(firstNumber), parseFloat(secondNumber), sign);
+            oldResult.textContent= ` ${firstNumber} ${sign}`;
+            firstNumber= String(result);
+            secondNumber= '';
+            newResult.textContent= result;
 
         } 
     }
 });
 
 radice.addEventListener('click' , () => {
-    if (firstN != '') {
+    if (firstNumber != '') {
 
-        if(pressed === 0 ) {
+        if(operatorPressed === 0 ) {
         
             sign= radice.textContent;
             oldResult.textContent= newResult.textContent +sign;
-            newResult.textContent= '';
-            result= operate(parseFloat(firstN), parseFloat(secondN), sign);
-            firstN= result;
-            secondN= '';
-            newResult.textContent= '';
-            oldResult.textContent= result;
-            //pressed = 1; 
-            //fNumber = 1;
+            result= operate(parseFloat(firstNumber), parseFloat(secondNumber), sign);
+            oldResult.textContent= ` ${firstNumber} ${sign}`;
+            firstNumber= String(result);
+            secondNumber= '';
+            newResult.textContent= result;
 
         } 
     }
 });
 
 uguale.addEventListener('click' , () => {
-    if (firstN != '' && secondN != '') {
+    if (firstNumber != '' && secondNumber != '') {
         
             
-            oldResult.textContent= ` ${firstN} ${sign} ${secondN} `;
+            oldResult.textContent= ` ${firstNumber} ${sign} ${secondNumber} `;
             newResult.textContent= '';
-            result= operate(parseFloat(firstN), parseFloat(secondN), sign);
+            result= operate(parseFloat(firstNumber), parseFloat(secondNumber), sign);
             sign= '=';
             newResult.textContent= result;
-            firstN= result;
-            secondN= '';
+            firstNumber= String(result);
+            secondNumber= '';
 
-            pressed = 0; 
+            operatorPressed = 0; 
             fNumber = 0;
 
     } 
 
 });
     
-
+/* --------------------------------------------------------- */
 
 function operate (firstN, secondN, sign) {
 
@@ -245,7 +264,7 @@ function operate (firstN, secondN, sign) {
             break;
 
         case '*':
-            return firstN * secondN;
+            return (firstN * secondN);
             break;
 
         case '/':
@@ -266,13 +285,15 @@ function operate (firstN, secondN, sign) {
 }
 
 function inizialize () {
-    newResult.textContent="";
+    newResult.textContent='';
     oldResult.textContent='';
-    pressed = 0;
-    fNumber=0;
+    operatorPressed = 0;
+    fNumber= 0;
 
-    firstN='';
-    secondN='';
+    firstNumber='';
+    secondNumber='';
     result=0;
-    sign='';
+    sign= undefined;
+    str='';
+
 };
