@@ -23,7 +23,7 @@ numeri.forEach((numero) => {
 
         if(fNumber === 0) {
 
-            sign == '=' ? inizialize() : null ; 
+            sign == '=' || sign == '√' ? inizialize() : null ; 
 
             newResult.textContent+= numero.textContent;
             firstNumber+=numero.textContent;
@@ -50,13 +50,11 @@ dot.addEventListener('click',  () => {
 
             newResult.textContent += dot.textContent;
             firstNumber+=dot.textContent;
-            console.log(`sono trovato1 ${trovato1}`)
     
         } else if ((secondNumber != '' && operatorPressed === 1) && (!trovato2)) {
 
             newResult.textContent += dot.textContent;
             secondNumber+= dot.textContent;
-            console.log(`sono trovato2 ${trovato2}`)
 
         }
 
@@ -70,7 +68,7 @@ deleteAll.addEventListener('click',  () => {
 
 
 Sdelete.addEventListener('click' , () => {
-    if (sign != '=') {
+    if (sign != '=' && sign != '√' && sign != 'x²') {
 
         if(newResult.textContent == 'NaN' || newResult.textContent == 'Infinity') {
             inizialize();
@@ -249,6 +247,82 @@ uguale.addEventListener('click' , () => {
     } 
 
 });
+
+
+window.onkeydown = function(event){ 
+    let x = event.key;
+    let tasto;
+    
+    
+    numeri.forEach((numero) => {
+        
+        if(numero.textContent == x) {
+            numero.click();
+            numero.classList.add('keyboard');
+            this.setTimeout(function() {numero.classList.remove('keyboard')}, 225);
+        }
+    });
+
+    switch(x){
+        
+        case '+':
+            tasto= document.querySelector('#addizione');
+            break;
+
+        case '-':
+            tasto = document.querySelector('#sottrazione');
+            break;
+
+        case 'x':
+            tasto = document.querySelector('#moltiplicazione');
+            break;
+
+        case '*':
+            tasto = document.querySelector('#moltiplicazione');
+            break;
+
+        case '/':
+            tasto = document.querySelector('#divisione');
+            break;
+
+        case 'r':
+            tasto = document.querySelector('#radice');
+            break;
+
+        case 's':
+            tasto = document.querySelector('#potenza');
+            break;
+
+        case '=':
+            tasto = document.querySelector('#equal');
+            break;
+
+        case 'Enter':
+            event.preventDefault();
+            tasto = document.querySelector('#equal');
+            break;
+
+        case '.':
+            tasto = document.querySelector("#dot");
+            break;
+
+        case 'Backspace':
+            tasto = document.querySelector("#delete");
+            break;
+
+        case 'Escape':
+            tasto = document.querySelector('#deleteAll');
+            break;
+
+    }
+
+    if (tasto != undefined){
+        tasto.click();
+        tasto.classList.add('keyboard');
+        this.setTimeout(function() {tasto.classList.remove('keyboard')}, 225);
+        
+    }
+}
     
 /* --------------------------------------------------------- */
 
