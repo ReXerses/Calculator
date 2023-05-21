@@ -282,6 +282,7 @@ window.onkeydown = function(event){
             break;
 
         case '/':
+            event.preventDefault();
             tasto = document.querySelector('#divisione');
             break;
 
